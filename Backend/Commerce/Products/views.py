@@ -100,3 +100,16 @@ class OrderItemDetail(generics.RetrieveUpdateDestroyAPIView):
     """ 
     serializer_class = OrdersItemSerializer
     queryset = OrderItem.objects.all()
+    lookup_url_kwarg = "item_id"
+
+    def delete(self, request, *args, **kwargs):
+      """
+      custom method to delete cart item
+      """
+      item_id = self.kwargs.get(self.lookup_url_kwarg)
+      item = OrderItem.objects.get(id=item_id)
+      # update product inventory when item within order(cart) is deleted 
+      product = Product.objects.get(id=item.product.id)
+      product.inventory = product.inventory + item.quantity
+      product.save()
+      return self.destroy(request, *args, **kwargs)
