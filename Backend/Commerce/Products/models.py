@@ -6,6 +6,7 @@ from datetime import datetime
 # Create your models here.
 class Product(models.Model):
     title = models.CharField(max_length=244, default='')
+    inventory = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title
@@ -24,6 +25,3 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
-
-    def __str__(self):
-        return self.product
