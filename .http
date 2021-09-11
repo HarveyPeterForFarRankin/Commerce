@@ -1,13 +1,7 @@
-# POST http://localhost:8000/product/orders/items/create HTTP/1.1
-# content-type: application/json
-# Authorization: Token 9d413e3ae7de8cc3de1f87a8f94018dcccf2e744
-
-# {
-#     "order": 1,
-#     "product": 2,
-#     "quantity":3
-# }
-
-DELETE http://localhost:8000/product/orders/items/update/20 HTTP/1.1
+POST http://localhost:8000/auth/user/create HTTP/1.1
 content-type: application/json
-Authorization: Token 9d413e3ae7de8cc3de1f87a8f94018dcccf2e744
+
+{
+    "username":"testing@harvey.com",
+    "password":"test"
+}

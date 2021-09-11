@@ -1,7 +1,13 @@
+from django.db.models.query import QuerySet
+from django.http import request
 from django.shortcuts import render
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
+from rest_framework import generics, status
+from .models import CustomUser
+from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny
 
 class CustomAuthToken(ObtainAuthToken):
 
@@ -15,4 +21,24 @@ class CustomAuthToken(ObtainAuthToken):
             'user_id': user.pk,
             'email': user.email
         })
-    
+
+class CreateUser(APIView):
+    """
+    basic endpoint to create user with email and password
+    """
+
+    permission_classes = [AllowAny,]
+
+    def post(self, request):
+        username = request.data['username']
+        password = request.data['password']
+        if username and password:
+            user, created = CustomUser.objects.get_or_create(email=username)
+            if created:
+                user.set_password(password)
+                user.save() 
+                return Response({'message':'User created'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'message': 'User could not be created'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({'message': 'missing username or password'}, status=status.HTTP_400_BAD_REQUEST)
