@@ -51,7 +51,9 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated', 
-    )
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'Products.pagination.SetPagination',
+    'PAGE_SIZE': '__all__'
 }
 
 

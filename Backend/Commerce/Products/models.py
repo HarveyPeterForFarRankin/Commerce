@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models.base import Model
 from Users.models import CustomUser
 from datetime import datetime
+import uuid
 
 class Product(models.Model):
     title = models.CharField(max_length=244, default='')
@@ -38,5 +39,5 @@ class Review(models.Model):
     review_text = models.CharField(max_length=500)
 
 class Discount(models.Model):
-    key = models.UUIDField()
+    key = models.UUIDField(default=uuid.uuid4, editable=False)
     percentage = models.IntegerField(default=0)

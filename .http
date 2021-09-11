@@ -1,7 +1,3 @@
-PUT http://localhost:8000/auth/user/update HTTP/1.1
+GET http://localhost:8000/product/orders/items/1 HTTP/1.1
 content-type: application/json
 Authorization: Token 6cf069b59ba517221f78946eb465c82ed17cbadd
-
-{
-    "first_name":"Harvey",
-}
