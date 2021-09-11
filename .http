@@ -1,2 +1,2 @@
-GET http://localhost:8000/product/products/2 HTTP/1.1
+GET http://localhost:8000/product/reviews/5 HTTP/1.1
 content-type: application/json

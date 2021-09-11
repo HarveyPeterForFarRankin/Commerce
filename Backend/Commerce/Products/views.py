@@ -3,8 +3,8 @@ from django.db.models.query import QuerySet
 from django.shortcuts import render
 from rest_framework import generics, status
 from rest_framework.response import Response
-from .models import Product, Order, OrderItem, Discount
-from .serializers import ProductSerializer, OrdersSerializer, OrdersItemSerializer, DiscountSerializer
+from .models import Product, Order, OrderItem, Discount, Review
+from .serializers import ProductSerializer, OrdersSerializer, OrdersItemSerializer, DiscountSerializer, ReviewSerializer
 from rest_framework.permissions import AllowAny
 from .util import has_enough_inventory
 
@@ -138,3 +138,43 @@ class Discount(generics.RetrieveAPIView):
     queryset = Discount.objects.all()
     lookup_url_kwarg = "code"
     lookup_field = 'key'
+
+# REVIEWS
+
+class ReviewView(generics.ListAPIView):
+
+    """
+    list reviews for product
+    """
+
+    serializer_class = ReviewSerializer
+    queryset = Review.objects.all()
+    permission_classes = [AllowAny,]
+    lookup_url_kwarg = "pk"
+
+    def get_queryset(self):
+        """
+        get all items within a cart
+        """
+        product_id = self.kwargs.get(self.lookup_url_kwarg)
+        return Review.objects.filter(product=product_id)
+
+
+class AddReview(generics.CreateAPIView):
+    """
+    create review
+
+    """
+    serializer_class = ReviewSerializer
+    permission_classes = [AllowAny,]
+    queryset = Review.objects.all()
+
+
+    def create(self, request, *args, **kwargs):
+        """
+        create order with user id coming from middleware
+        """
+        new_response = self.request.data
+        new_response['owner'] = self.request.user.id
+        response = super(AddOrderDetail, self).create(new_response, *args, **kwargs)
+        return response

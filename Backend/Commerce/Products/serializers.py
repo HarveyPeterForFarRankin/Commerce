@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Order, OrderItem, Product, Discount
+from .models import Order, OrderItem, Product, Discount, Review
 from Users.serializers import UserSerializer
 
 class ProductSerializer(serializers.Serializer):
@@ -39,3 +39,14 @@ class DiscountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Discount
         fields = "__all__"
+
+class ReviewSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+    product = ProductSerializer
+    user = UserSerializer
+    review_text = serializers.CharField()
+
+    class Meta:
+        model = Review
+        fields = "__all__"
+    
