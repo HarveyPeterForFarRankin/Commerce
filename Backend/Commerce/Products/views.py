@@ -13,7 +13,6 @@ from .util import has_enough_inventory
 class ProductListView(generics.ListCreateAPIView):
     """
     returns all products
-
     """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -33,7 +32,6 @@ class ProductRetrieveView(generics.RetrieveAPIView):
 class OrdersListView(generics.ListCreateAPIView):
     """"
     returns all orders (user_id)
-
     """
     serializer_class = OrdersSerializer
     
@@ -44,7 +42,6 @@ class OrdersListView(generics.ListCreateAPIView):
 class AddOrderDetail(generics.CreateAPIView):
     """
     create order (add cart)
-
     """
     serializer_class = OrdersSerializer
     queryset = Order.objects.all()
@@ -62,7 +59,6 @@ class AddOrderDetail(generics.CreateAPIView):
 class OrderDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     update, delete and get order
-
     """ 
     serializer_class = OrdersSerializer
     queryset = Order.objects.all()
@@ -72,7 +68,6 @@ class OrderDetail(generics.RetrieveUpdateDestroyAPIView):
 class OrdersItemsListView(generics.ListAPIView):
     """"
     returns all orderItems (user_id) within order
-
     """
     serializer_class = OrdersItemSerializer
     queryset = OrderItem.objects.all()
@@ -109,7 +104,6 @@ class AddOrderItemDetail(generics.CreateAPIView):
 class OrderItemDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     update, delete and get order
-
     """ 
     serializer_class = OrdersItemSerializer
     queryset = OrderItem.objects.all()
@@ -142,7 +136,6 @@ class Discount(generics.RetrieveAPIView):
 # REVIEWS
 
 class ReviewView(generics.ListAPIView):
-
     """
     list reviews for product
     """
@@ -163,7 +156,6 @@ class ReviewView(generics.ListAPIView):
 class AddReview(generics.CreateAPIView):
     """
     create review
-
     """
     serializer_class = ReviewSerializer
     permission_classes = [AllowAny,]

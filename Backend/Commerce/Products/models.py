@@ -37,6 +37,7 @@ class Review(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     review_text = models.CharField(max_length=500)
+    rating = models.IntegerField(default=0)
 
 class Discount(models.Model):
     key = models.UUIDField(default=uuid.uuid4, editable=False)
