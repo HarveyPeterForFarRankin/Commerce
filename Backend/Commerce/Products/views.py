@@ -1,12 +1,14 @@
 from django.contrib.auth.models import User
+from django.db.models.query import QuerySet
 from django.shortcuts import render
 from rest_framework import generics, status
 from rest_framework.response import Response
-from .models import Product, Order, OrderItem
-from .serializers import ProductSerializer, OrdersSerializer, OrdersItemSerializer
+from .models import Product, Order, OrderItem, Discount
+from .serializers import ProductSerializer, OrdersSerializer, OrdersItemSerializer, DiscountSerializer
 from rest_framework.permissions import AllowAny
 from .util import has_enough_inventory
-# Create your views here.
+
+# PRODUCT
 
 class ProductListView(generics.ListCreateAPIView):
     """
@@ -16,7 +18,9 @@ class ProductListView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [AllowAny,]
+    filterset_fields = "__all__"
 
+# ORDER || CURRENT CART
 
 class OrdersListView(generics.ListCreateAPIView):
     """"
@@ -47,7 +51,6 @@ class AddOrderDetail(generics.CreateAPIView):
         response = super(AddOrderDetail, self).create(new_response, *args, **kwargs)
         return response
 
-
 class OrderDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     update, delete and get order
@@ -55,6 +58,8 @@ class OrderDetail(generics.RetrieveUpdateDestroyAPIView):
     """ 
     serializer_class = OrdersSerializer
     queryset = Order.objects.all()
+
+# ITEMS WITHIN ORDER || OR CURRENT CART
 
 class OrdersItemsListView(generics.ListAPIView):
     """"
@@ -113,3 +118,15 @@ class OrderItemDetail(generics.RetrieveUpdateDestroyAPIView):
       product.inventory = product.inventory + item.quantity
       product.save()
       return self.destroy(request, *args, **kwargs)
+
+# DISOCUNT CODES
+
+class Discount(generics.RetrieveAPIView):
+    """
+    get discount with correct code
+    """
+    permission_classes = [AllowAny,]
+    serializer_class = DiscountSerializer
+    queryset = Discount.objects.all()
+    lookup_url_kwarg = "code"
+    lookup_field = 'key'

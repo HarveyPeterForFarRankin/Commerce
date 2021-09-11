@@ -16,7 +16,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -29,7 +28,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'Users',
-    'Products'
+    'Products',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -53,7 +53,10 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated', 
     ),
     'DEFAULT_PAGINATION_CLASS': 'Products.pagination.SetPagination',
-    'PAGE_SIZE': '__all__'
+    'PAGE_SIZE': '__all__',
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
 }
 
 
@@ -77,16 +80,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Commerce.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 
 DATABASES = {
 
