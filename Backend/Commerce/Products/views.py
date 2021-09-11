@@ -20,6 +20,14 @@ class ProductListView(generics.ListCreateAPIView):
     permission_classes = [AllowAny,]
     filterset_fields = "__all__"
 
+class ProductRetrieveView(generics.RetrieveAPIView):
+    """
+    get product detail
+    """
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [AllowAny,]
+
 # ORDER || CURRENT CART
 
 class OrdersListView(generics.ListCreateAPIView):
