@@ -3,6 +3,7 @@ from django.db.models.base import Model
 from Users.models import CustomUser
 from datetime import datetime
 import uuid
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 class Product(models.Model):
     title = models.CharField(max_length=244, default='')
@@ -37,7 +38,10 @@ class Review(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     review_text = models.CharField(max_length=500)
-    rating = models.IntegerField(default=0)
+    rating = models.IntegerField(default=1,validators=[
+            MaxValueValidator(5),
+            MinValueValidator(1)
+        ] )
 
 class Discount(models.Model):
     key = models.UUIDField(default=uuid.uuid4, editable=False)
