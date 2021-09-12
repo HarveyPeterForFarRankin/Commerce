@@ -1,10 +1,11 @@
 import { makeStyles } from '@material-ui/core/styles';
+import { topBarHeight } from '../../Constants';
 
 //STYLES
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
-    height: '35px',
+    height: topBarHeight,
     backgroundColor: theme.palette.info.light,
     display: 'flex',
     position: 'fixed',

@@ -1,14 +1,15 @@
-import "./App.css";
-import { useEffect } from "react";
-import axios from "axios";
-import BaseLayout from "./Containers/Base";
-import theme from "./theme";
-import { ThemeProvider } from "@material-ui/styles";
+import './App.css';
+import { useEffect } from 'react';
+import axios from 'axios';
+import BaseLayout from './Containers/Base';
+import theme from './theme';
+import { ThemeProvider } from '@material-ui/styles';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 function App() {
   useEffect(() => {
     axios
-      .get("http://localhost:8000/product/products")
+      .get('http://localhost:8000/product/products')
       .then((res) => {
         const { data } = res;
         console.log(data);
@@ -19,7 +20,18 @@ function App() {
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
-        <BaseLayout />
+        <Router>
+          <Switch>
+            <Route
+              path="/"
+              render={() => (
+                <BaseLayout>
+                  <div>Content</div>
+                </BaseLayout>
+              )}
+            />
+          </Switch>
+        </Router>
       </ThemeProvider>
     </div>
   );
