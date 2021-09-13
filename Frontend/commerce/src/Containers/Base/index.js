@@ -8,16 +8,12 @@ const useStyles = makeStyles((theme) => ({
   container: {
     // TODO CHANGE
     boxSizing: 'border-box',
-    paddingTop: '15px',
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
-    [theme.breakpoints.up('md')]: {
-      padding: '15px',
-    },
   },
   content: {
-    width: 'min(100%, 1200px)',
+    width: '100%',
     marginTop: `calc(${topBarHeight} + ${topNavBarHeight})`,
   },
 }));

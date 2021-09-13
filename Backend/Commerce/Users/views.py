@@ -8,8 +8,17 @@ from rest_framework import generics, status
 from .models import CustomUser
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
-from .serializers import UserSerializer
-from .models import CustomUser
+from .serializers import UserSerializer, TokenSerializer
+from .models import CustomUser\
+
+
+class CheckTokenView(generics.RetrieveAPIView):
+    queryset = Token.objects.all()
+    permission_classes = [AllowAny,]
+    serializer_class = TokenSerializer
+    lookup_url_kwarg = "code"
+    lookup_field = 'key'
+
 
 class CustomAuthToken(ObtainAuthToken):
 
@@ -20,8 +29,12 @@ class CustomAuthToken(ObtainAuthToken):
         token, created = Token.objects.get_or_create(user=user)
         return Response({
             'token': token.key,
-            'user_id': user.pk,
-            'email': user.email
+            "user": {
+                'user_id': user.pk,
+                'email': user.email,
+                'first_name': user.first_name,
+                'last_name': user.last_name
+            }            
         })
 
 class CreateUser(APIView):
@@ -44,6 +57,16 @@ class CreateUser(APIView):
                 return Response({'message': 'User could not be created'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({'message': 'missing username or password'}, status=status.HTTP_400_BAD_REQUEST)
+
+class UserGet(generics.RetrieveUpdateAPIView):
+    queryset = CustomUser.objects.all()
+
+    def get(self, request):
+        instance = CustomUser.objects.get(id=request.user.id)
+        print(instance)
+        serializer = UserSerializer(instance, partial=True)
+        return Response(serializer.data)
+       
 
 class User(generics.UpdateAPIView):
     queryset = CustomUser.objects.all()

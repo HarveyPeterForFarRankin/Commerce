@@ -1,40 +1,65 @@
 import './App.css';
-import { useEffect } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import BaseLayout from './Containers/Base';
 import theme from './theme';
 import { ThemeProvider } from '@material-ui/styles';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Main from './Containers/Main';
+import { loginAPI, checkToken } from './API/Auth';
+export const AuthContext = createContext();
 
 function App() {
+  const [user, setUser] = useState({});
+  const [isAuthenticated, setAuthenticated] = useState(false);
+  const [fetchingLogin, setFetching] = useState(true);
+
   useEffect(() => {
-    axios
-      .get('http://localhost:8000/product/products')
+    //try log in
+    checkToken()
       .then((res) => {
-        const { data } = res;
-        console.log(data);
+        // this needs to be finshed
+        const {
+          status,
+          data: { first_name },
+        } = res;
+        if (status === 200) {
+          setAuthenticated(true);
+          setUser({
+            first_name,
+          });
+        }
+        setFetching(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => setFetching(false));
   }, []);
 
-  return (
-    <div className="App">
-      <ThemeProvider theme={theme}>
-        <Router>
-          <Switch>
-            <Route
-              path="/"
-              render={() => (
-                <BaseLayout>
-                  <div>Content</div>
-                </BaseLayout>
-              )}
-            />
-          </Switch>
-        </Router>
-      </ThemeProvider>
-    </div>
-  );
+  if (fetchingLogin) {
+    return <div>loading</div>;
+  } else {
+    return (
+      <div className="App">
+        <AuthContext.Provider
+          value={[user, setUser, isAuthenticated, setAuthenticated]}
+        >
+          <ThemeProvider theme={theme}>
+            <Router>
+              <Switch>
+                <Route
+                  path="/"
+                  render={() => (
+                    <BaseLayout>
+                      <Main />
+                    </BaseLayout>
+                  )}
+                />
+              </Switch>
+            </Router>
+          </ThemeProvider>
+        </AuthContext.Provider>
+      </div>
+    );
+  }
 }
 
 export default App;
