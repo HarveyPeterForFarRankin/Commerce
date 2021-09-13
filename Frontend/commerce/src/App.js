@@ -1,12 +1,11 @@
 import './App.css';
-import { createContext, useContext, useEffect, useState } from 'react';
-import axios from 'axios';
+import { createContext, useEffect, useState } from 'react';
 import BaseLayout from './Containers/Base';
 import theme from './theme';
 import { ThemeProvider } from '@material-ui/styles';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Main from './Containers/Main';
-import { loginAPI, checkToken } from './API/Auth';
+import { checkToken } from './API/Auth';
 export const AuthContext = createContext();
 
 function App() {
