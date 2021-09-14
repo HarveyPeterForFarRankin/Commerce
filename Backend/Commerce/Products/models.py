@@ -10,6 +10,7 @@ class Product(models.Model):
     inventory = models.IntegerField(default=0)
     cost = models.FloatField(default=0.0)
     category = models.CharField(max_length=140, default='')
+    description = models.CharField(max_length=500, default='description')
 
     def __str__(self):
         return self.title

@@ -1,10 +1,15 @@
 import { makeStyles } from '@material-ui/styles';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Slider from '../../Components/Slider';
 import { sliderWidth } from '../../Constants/';
 import SettingsEthernetIcon from '@material-ui/icons/SettingsEthernet';
 import { IconButton } from '@material-ui/core';
 import Card from '../../Components/Card';
+import { getAllProducts } from '../../API/Products';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Chip from '@material-ui/core/Chip';
+import CancelIcon from '@material-ui/icons/Cancel';
+import { useHistory } from 'react-router';
 //STYLES
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -14,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '50px',
     width: '100%',
     backgroundColor: '#EFEFEF',
-    height: '400px',
   },
   sliderContainer: {
     height: '100%',
@@ -44,6 +48,9 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
+  spaceBetween: {
+    justifyContent: 'space-between',
+  },
   expdandIcon: {
     cursor: 'pointer',
     height: '24px',
@@ -63,23 +70,104 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 0,
   },
   cardContainer: {
+    transition: 'all .6s',
+    cursor: 'pointer',
     margin: '10px',
     flex: 1,
+    '&:hover': {
+      transform: 'translateY(-10px)',
+    },
+  },
+  smallFilter: {
+    display: 'flex',
+    flex: '0 0 50%',
+    justifyContent: 'space-around',
+  },
+  filterButton: {
+    textTransform: 'capitalize',
+    cursor: 'pointer',
+    fontSize: '18px',
+    border: 'none',
+    margin: '5px',
+    padding: 0,
+    transition: 'all 0.6s',
+    '&:hover': {
+      color: '#993428',
+    },
+    overflowY: 'auto',
   },
 }));
+
+const categories = ['sport', 'summer', 'smart', 'casual', 'comfort'];
 
 const Products = () => {
   const classes = useStyles();
   const [sliderOpen, setSlider] = useState(false);
+  const [products, setProducts] = useState([]);
+  const isSmallScreen = useMediaQuery('(max-width:800px)');
+  const [category, setCategory] = useState('');
+  const history = useHistory();
+
+  useEffect(() => {
+    setSlider(false);
+  }, [isSmallScreen]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [category]);
 
   const toggleSlider = () => setSlider(!sliderOpen);
 
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    const response = await getAllProducts(category);
+    const {
+      data: { results },
+      status,
+    } = response;
+    if (status === 200) {
+      setProducts(results);
+    }
+  };
+
+  const routeToProductPage = (id) => {
+    const { push } = history;
+    push({ pathname: `/product/${id}`, state: { key: id } });
+  };
+
   return (
     <div className={classes.container}>
-      <div className={classes.topBar}>
-        <IconButton onClick={toggleSlider}>
-          <SettingsEthernetIcon className={classes.expdandIcon} />
-        </IconButton>
+      <div className={`${classes.topBar} ${!!category && classes.spaceBetween}`}>
+        {category && (
+          <Chip
+            label={category}
+            onDelete={() => setCategory('')}
+            deleteIcon={<CancelIcon />}
+            color="secondary"
+          />
+        )}
+        {isSmallScreen ? (
+          <div className={classes.smallFilter}>
+            {categories.map((category) => {
+              return (
+                <p
+                  className={classes.filterButton}
+                  type="button"
+                  onClick={() => setCategory(category)}
+                >
+                  {category}
+                </p>
+              );
+            })}
+          </div>
+        ) : (
+          <IconButton onClick={toggleSlider}>
+            <SettingsEthernetIcon className={classes.expdandIcon} />
+          </IconButton>
+        )}
       </div>
       <div className={`${classes.content} ${!sliderOpen && classes.contentWide}`}>
         <div
@@ -87,17 +175,26 @@ const Products = () => {
             !sliderOpen && classes.sliderClosed
           }`}
         >
-          <Slider closeNav={toggleSlider} />
+          <Slider
+            activeCategory={category}
+            categoryClick={setCategory}
+            closeNav={toggleSlider}
+          />
         </div>
         <div
           className={`${classes.prdoductContainer} ${
             sliderOpen && classes.prdoductContainerOpen
           }`}
         >
-          {[0, 0, 0, 0].map((card) => {
+          {products.map((product) => {
             return (
-              <div className={classes.cardContainer}>
-                <Card />
+              <div key={product.id} className={classes.cardContainer}>
+                <Card
+                  buttonClick={routeToProductPage}
+                  id={product.id}
+                  title={product.title}
+                  category={product.category}
+                />
               </div>
             );
           })}

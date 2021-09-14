@@ -5,8 +5,14 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import CardMedia from '@material-ui/core/CardMedia';
 
 const useStyles = makeStyles({
+  media: {
+    boxSizing: 'border-box',
+    height: '300px',
+    paddingTop: '56.25%', // 16:9
+  },
   root: {
     minWidth: 275,
   },
@@ -23,21 +29,18 @@ const useStyles = makeStyles({
   },
 });
 
-export default function SimpleCard() {
+export default function SimpleCard({ id, title, category, buttonClick, ...props }) {
   const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
-
+  const image = require(`../../Assets/shoes/${id}.jpg`).default;
   return (
-    <Card className={classes.root}>
+    <Card onClick={() => buttonClick(id)} className={classes.root}>
+      <CardMedia className={classes.media} image={image} title="Paella dish" />
       <CardContent>
         <Typography className={classes.title} color="textSecondary" gutterBottom>
-          Word of the Day
+          {category}
         </Typography>
         <Typography variant="h5" component="h2">
-          be{bull}nev{bull}o{bull}lent
-        </Typography>
-        <Typography className={classes.pos} color="textSecondary">
-          adjective
+          {title}
         </Typography>
         <Typography variant="body2" component="p">
           well meaning and kindly.
@@ -46,8 +49,13 @@ export default function SimpleCard() {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button variant="outlined" color="secondary" size="small">
-          Learn More
+        <Button
+          onClick={() => buttonClick(id)}
+          variant="outlined"
+          color="secondary"
+          size="small"
+        >
+          Details
         </Button>
       </CardActions>
     </Card>

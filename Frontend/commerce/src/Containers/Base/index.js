@@ -16,6 +16,10 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     marginTop: `calc(${topBarHeight} + ${topNavBarHeight})`,
   },
+  footer: {
+    height: '200px',
+    backgroundColor: 'rgb(202,202,202, 0.3)',
+  },
 }));
 
 const BaseLayout = ({ children, ...props }) => {

@@ -8,6 +8,7 @@ class ProductSerializer(serializers.Serializer):
     inventory = serializers.IntegerField()
     cost = serializers.FloatField()
     category = serializers.CharField()
+    description = serializers.CharField()
 
     class Meta:
         model = Product

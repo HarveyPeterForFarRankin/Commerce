@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Auth from '../../Helpers/auth';
 const AuthHelper = new Auth();
+export const host = 'http://localhost:8000/';
 
 export const loginAPI = (username, password) => {
   return axios.post('http://localhost:8000/auth/login', { username, password });

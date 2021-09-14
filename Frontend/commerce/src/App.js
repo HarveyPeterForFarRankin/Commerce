@@ -6,6 +6,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Main from './Containers/Main';
 import { checkToken } from './API/Auth';
+import Product from './Containers/Product';
 export const AuthContext = createContext();
 
 function App() {
@@ -45,10 +46,19 @@ function App() {
             <Router>
               <Switch>
                 <Route
+                  exact
                   path="/"
                   render={() => (
                     <BaseLayout>
                       <Main />
+                    </BaseLayout>
+                  )}
+                />
+                <Route
+                  path="/product/:key"
+                  render={() => (
+                    <BaseLayout>
+                      <Product />
                     </BaseLayout>
                   )}
                 />

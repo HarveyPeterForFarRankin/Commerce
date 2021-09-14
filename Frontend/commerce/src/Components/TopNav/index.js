@@ -12,6 +12,7 @@ import TwitterIcon from '@material-ui/icons/Twitter';
 import Auth from '../../Helpers/auth';
 import useProfileData from '../../HOOKS/useUserData';
 import { AuthContext } from '../../App';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
   flex: {
@@ -77,12 +78,16 @@ const useStyles = makeStyles((theme) => ({
       fontSize: '20px',
     },
   },
+  logoWrapper: {
+    cursor: 'pointer',
+  },
 }));
 
 export default function PrimarySearchAppBar() {
   const classes = useStyles();
   const [userName, setUsername] = useState('');
   const [user] = useContext(AuthContext);
+  const history = useHistory();
 
   useEffect(() => {
     const { first_name } = user;
@@ -91,13 +96,21 @@ export default function PrimarySearchAppBar() {
     }
   }, [user]);
 
+  const routeToMain = () => {
+    const { push } = history;
+    push('/');
+  };
+
   return (
     <div className={classes.grow}>
       <AppBar classes={{ root: classes.root }} position="static">
         <Toolbar className={classes.flex}>
-          <Typography classes={{ root: classes.text }} variant="h5" noWrap>
-            Golden Shoe
-          </Typography>
+          <div className={classes.logoWrapper} onClick={routeToMain}>
+            <Typography classes={{ root: classes.text }} variant="h5" noWrap>
+              Golden Shoe
+            </Typography>
+          </div>
+
           <div className={classes.section}>
             {userName && <p>{userName}</p>}
 
