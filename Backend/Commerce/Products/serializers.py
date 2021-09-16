@@ -17,7 +17,7 @@ class ProductSerializer(serializers.Serializer):
 class OrdersSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
     owner = UserSerializer
-    created_at = serializers.DateTimeField()
+    created_at = serializers.DateTimeField(required=False)
     status = serializers.CharField()
 
     class Meta:
@@ -50,4 +50,5 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = "__all__"
+        depth = 1
     

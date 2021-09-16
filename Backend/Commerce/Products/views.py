@@ -7,6 +7,7 @@ from .models import Product, Order, OrderItem, Discount, Review
 from .serializers import ProductSerializer, OrdersSerializer, OrdersItemSerializer, DiscountSerializer, ReviewSerializer
 from rest_framework.permissions import AllowAny
 from .util import has_enough_inventory
+import json
 
 # PRODUCT
 
@@ -53,7 +54,7 @@ class AddOrderDetail(generics.CreateAPIView):
         """
         new_response = self.request.data
         new_response['owner'] = self.request.user.id
-        response = super(AddOrderDetail, self).create(new_response, *args, **kwargs)
+        response = super(AddOrderDetail, self).create(self.request, *args, **kwargs)
         return response
 
 class OrderDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -90,13 +91,16 @@ class AddOrderItemDetail(generics.CreateAPIView):
         create order item and in order and remove quantity from product quantity
         """
         product = Product.objects.get(id=self.request.data['product'])
+        order = Order.objects.get(id=self.request.data['order'])
         quantity = self.request.data['quantity']
+        self.request.data['product'] = product
+        self.request.data['order'] = order
         has_inventory, new_inventory_number = has_enough_inventory(product_query_set=product, quantity_wanted=quantity)
         if has_inventory:
             # update inventory
             product.inventory = new_inventory_number
             product.save()
-            response = super(AddOrderItemDetail, self).create(request, *args, **kwargs)
+            response = super(AddOrderItemDetail, self).create(self.request, *args, **kwargs)
             return response
         else:
             return Response({'error':'not enough inventory'}, status=status.HTTP_400_BAD_REQUEST)

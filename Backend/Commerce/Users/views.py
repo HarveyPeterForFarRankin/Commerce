@@ -63,7 +63,6 @@ class UserGet(generics.RetrieveUpdateAPIView):
 
     def get(self, request):
         instance = CustomUser.objects.get(id=request.user.id)
-        print(instance)
         serializer = UserSerializer(instance, partial=True)
         return Response(serializer.data)
        

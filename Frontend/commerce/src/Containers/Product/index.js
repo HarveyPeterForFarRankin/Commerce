@@ -10,9 +10,12 @@ import { useEffect, useState } from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import { withRouter } from 'react-router';
-import { getProduct } from '../../API/Products';
+import { getProduct, getReviewsForProduct, addToOrder } from '../../API/Products';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import Tooltip from '@material-ui/core/Tooltip';
+import Reviews from '../../Components/Reviews';
+import { useRef } from 'react';
+import { Rating } from '@material-ui/lab';
 
 const useStyles = makeStyles((theme) => ({
   outerContainer: {
@@ -24,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
   },
   container: {
+    boxSizing: 'border-box',
     padding: '15px',
     width: 'min(100%, 1200px)',
     borderRadius: '10px',
@@ -106,6 +110,9 @@ const useStyles = makeStyles((theme) => ({
     top: '15px',
     right: '15px',
   },
+  reivews: {
+    padding: '30px 0px',
+  },
 }));
 
 const Product = ({ match, ...props }) => {
@@ -113,13 +120,31 @@ const Product = ({ match, ...props }) => {
   const isLargerThanSmall = useMediaQuery('(max-width:1200px)');
   const [product, setProduct] = useState(0);
   const [quantity, setQuantity] = useState(0);
+  const [reviews, setReviews] = useState([]);
+  const [pageSize, setPageSize] = useState(2);
+  const reviewsEndRef = useRef(null);
 
   useEffect(() => {
     const {
       params: { key },
     } = match;
+    //get product
+    handleProduct(key);
+    // get all reviews for
+    fetchReviews(key);
+  }, []);
 
-    getProduct(key)
+  useEffect(() => {
+    // listen for pagination
+    fetchReviews(product.id);
+  }, [pageSize]);
+
+  const handleChange = (e) => {
+    setQuantity(e.target.value);
+  };
+
+  const handleProduct = (id) => {
+    getProduct(id)
       .then((res) => {
         const { data } = res;
         setProduct(data);
@@ -127,14 +152,47 @@ const Product = ({ match, ...props }) => {
       .catch((err) => {
         console.error(err);
       });
-  }, []);
-
-  const handleChange = (e) => {
-    setQuantity(e.target.value);
   };
+
+  const handleAddToCart = async () => {
+    const order = localStorage.getItem('cart');
+    if (!!quantity) {
+      console.log(product);
+      const payload = {
+        order: +order,
+        product: +product.id,
+        size: 1,
+        quantity: +quantity,
+      };
+      console.log(payload);
+      const response = await addToOrder(payload);
+      console.log(response);
+    }
+  };
+
+  const fetchReviews = async (id) => {
+    if (id) {
+      const response = await getReviewsForProduct(
+        id?.toString(),
+        pageSize.toString()
+      );
+      const {
+        data: { results },
+      } = response;
+      setReviews(results);
+      return response;
+    }
+  };
+
+  const handleMoreReviews = () => setPageSize(pageSize + 2);
+  const handleClose = () => setPageSize(2);
 
   const { id, title, description, cost, inventory } = product;
   const quantityList = [1, 2, 3, 4, 5];
+
+  const overallRating =
+    reviews.reduce((acc, current) => acc + current.rating, 0) / reviews.length;
+
   return (
     <section className={classes.outerContainer}>
       <div className={classes.container}>
@@ -188,7 +246,9 @@ const Product = ({ match, ...props }) => {
                   </Select>
                 </FormControl>
               </div>
+              <Rating disabled name="simple-controlled" value={overallRating} />
               <Button
+                onClick={handleAddToCart}
                 disabled={!inventory}
                 className={classes.cartButton}
                 color="secondary"
@@ -202,6 +262,19 @@ const Product = ({ match, ...props }) => {
                 </Tooltip>
               </div>
             </div>
+          </div>
+        </div>
+        <div className={classes.reivews}>
+          <Typography className={classes.title} variant="h2" component="h2">
+            Reviews
+          </Typography>
+          <Divider />
+          <div ref={reviewsEndRef}>
+            <Reviews
+              handleClose={handleClose}
+              handleMoreButton={handleMoreReviews}
+              reviews={reviews}
+            />
           </div>
         </div>
       </div>

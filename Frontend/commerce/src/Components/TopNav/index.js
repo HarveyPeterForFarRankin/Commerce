@@ -7,12 +7,13 @@ import Typography from '@material-ui/core/Typography';
 import Badge from '@material-ui/core/Badge';
 import { topBarHeight } from '../../Constants';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import FacebookIcon from '@material-ui/icons/Facebook';
-import TwitterIcon from '@material-ui/icons/Twitter';
 import Auth from '../../Helpers/auth';
-import useProfileData from '../../HOOKS/useUserData';
 import { AuthContext } from '../../App';
 import { useHistory } from 'react-router';
+import { createCart, getCartItems } from '../../API/Products';
+import Popover from '@material-ui/core/Popover';
+
+const AuthHelper = new Auth();
 
 const useStyles = makeStyles((theme) => ({
   flex: {
@@ -81,13 +82,21 @@ const useStyles = makeStyles((theme) => ({
   logoWrapper: {
     cursor: 'pointer',
   },
+  cartPopup: {
+    boxSizing: 'border-box',
+    padding: '15px',
+    width: '400px',
+    height: '400px',
+  },
 }));
 
 export default function PrimarySearchAppBar() {
   const classes = useStyles();
   const [userName, setUsername] = useState('');
-  const [user] = useContext(AuthContext);
+  const [user, setUser, isAuthenticated, setAutheticated, cart, setCart] =
+    useContext(AuthContext);
   const history = useHistory();
+  const [anchorEl, setAnchorEl] = useState(null);
 
   useEffect(() => {
     const { first_name } = user;
@@ -96,10 +105,48 @@ export default function PrimarySearchAppBar() {
     }
   }, [user]);
 
+  useEffect(() => {
+    //update cart
+    if (user.id) {
+      setCartData();
+    }
+  }, [user.id]);
+
+  const setCartData = () => {
+    const cartId = AuthHelper.getItem('cart');
+    if (!cartId) {
+      // create cart if one not in localstorage
+      createCart({ status: 'open', owner: user.id }).then((res) => {
+        const {
+          data: { id },
+        } = res;
+        localStorage.setItem('cart', id);
+      });
+    } else {
+      getCartItems(cartId).then((res) => {
+        const {
+          data: { results },
+        } = res;
+        setCart(results);
+      });
+    }
+  };
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const routeToMain = () => {
     const { push } = history;
     push('/');
   };
+
+  const open = !!anchorEl;
+  const id = open ? 'simple-popover' : undefined;
 
   return (
     <div className={classes.grow}>
@@ -115,13 +162,29 @@ export default function PrimarySearchAppBar() {
             {userName && <p>{userName}</p>}
 
             <IconButton aria-label="show 17 new notifications" color="inherit">
-              <Badge badgeContent={0} color="secondary">
-                <ShoppingCartIcon className={classes.icon} />
+              <Badge badgeContent={cart.length} color="secondary">
+                <ShoppingCartIcon onClick={handleClick} className={classes.icon} />
               </Badge>
             </IconButton>
           </div>
         </Toolbar>
       </AppBar>
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+      >
+        <div className={classes.cartPopup}>items go here</div>
+      </Popover>
     </div>
   );
 }

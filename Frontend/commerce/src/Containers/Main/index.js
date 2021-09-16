@@ -1,7 +1,7 @@
 import BannerImage from '../../Assets/Images/banner.jpg';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import Products from '../Products';
 
 //STYLES
@@ -30,16 +30,18 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     position: 'absolute',
-    bottom: '50px',
-    left: '50px',
+    top: '35%',
+    left: '50%',
+    transform: 'translate(-50%,-50%)',
     animation: `$myEffect 2500ms ${theme.transitions.easing.easeInOut}`,
   },
   bannerText: {
     padding: 0,
     margin: 0,
     position: 'absolute',
-    bottom: '100px',
-    left: '50px',
+    top: '45%',
+    left: '50%',
+    transform: 'translate(-50%,-10%)',
     color: theme.palette.secondary.dark,
     animation: `$myEffect 2000ms ${theme.transitions.easing.easeInOut}`,
   },
@@ -75,7 +77,7 @@ const Main = () => {
       <div className={classes.banner}>
         <Button
           className={classes.button}
-          endIcon={<ArrowForwardIcon />}
+          endIcon={<ArrowDownwardIcon />}
           color="secondary"
           variant={'contained'}
         >

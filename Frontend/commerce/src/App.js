@@ -13,20 +13,23 @@ function App() {
   const [user, setUser] = useState({});
   const [isAuthenticated, setAuthenticated] = useState(false);
   const [fetchingLogin, setFetching] = useState(true);
+  const [cart, setCart] = useState({});
 
   useEffect(() => {
     //try log in
     checkToken()
       .then((res) => {
         // this needs to be finshed
+        console.log(res);
         const {
           status,
-          data: { first_name },
+          data: { first_name, id },
         } = res;
         if (status === 200) {
           setAuthenticated(true);
           setUser({
             first_name,
+            id: id,
           });
         }
         setFetching(false);
@@ -40,7 +43,7 @@ function App() {
     return (
       <div className="App">
         <AuthContext.Provider
-          value={[user, setUser, isAuthenticated, setAuthenticated]}
+          value={[user, setUser, isAuthenticated, setAuthenticated, cart, setCart]}
         >
           <ThemeProvider theme={theme}>
             <Router>

@@ -4,6 +4,8 @@ import { topBarHeight } from '../../Constants';
 import Login from '../Login';
 import Popover from '@material-ui/core/Popover';
 import { AuthContext } from '../../App';
+import FacebookIcon from '@material-ui/icons/Facebook';
+import TwitterIcon from '@material-ui/icons/Twitter';
 
 //STYLES
 const useStyles = makeStyles((theme) => ({
@@ -24,13 +26,14 @@ const useStyles = makeStyles((theme) => ({
   list: {
     display: 'flex',
     justifyContent: 'space-between',
-    flex: '0 1 110px',
+    flex: '0 1 200px',
     listStyleType: 'none',
     fontSize: '14px',
     color: theme.palette.common.black,
     textTransform: 'uppercase',
     cursor: 'pointer',
     fontWeight: 'bold',
+    alignItems: 'center',
     '& > li': {
       '&:hover': {
         color: theme.palette.primary.dark,
@@ -38,12 +41,18 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  fbIcon: {
+    color: '#4267B2',
+  },
+  twIcon: {
+    color: '#1DA1F2',
+  },
 }));
 
 const HelperBar = () => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [user, isUser, isAuthenticated] = useContext(AuthContext);
+  const [user, setUser, isAuthenticated, setAuthenticated] = useContext(AuthContext);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -55,6 +64,13 @@ const HelperBar = () => {
 
   const open = !!anchorEl;
   const id = open ? 'simple-popover' : undefined;
+
+  const logout = () => {
+    //remove token and reload page
+    localStorage.removeItem('cart');
+    localStorage.removeItem('token');
+    window.location.reload(false);
+  };
 
   return (
     <div className={classes.root}>
@@ -75,8 +91,18 @@ const HelperBar = () => {
         <Login />
       </Popover>
       <ul className={classes.list}>
+        <li>
+          <TwitterIcon className={classes.fbIcon} />
+        </li>
+        <li>
+          <FacebookIcon className={classes.twIcon} />
+        </li>
         <li>join</li>
-        {isAuthenticated ? <li>Logout</li> : <li onClick={handleClick}>Sign-in</li>}
+        {isAuthenticated ? (
+          <li onClick={logout}>Logout</li>
+        ) : (
+          <li onClick={handleClick}>Sign-in</li>
+        )}
       </ul>
     </div>
   );
