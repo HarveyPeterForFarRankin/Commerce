@@ -12,9 +12,10 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: 'wrap',
   },
   card: {
-    flex: ' 1 0 400px',
+    flex: ' 1 1 400px',
     margin: '10px',
     padding: '20px',
+    boxSizing: 'border-box',
   },
   buttonContainer: {
     width: '100%',
@@ -47,10 +48,10 @@ const Reviews = ({ reviews, handleMoreButton, handleClose, ...props }) => {
       {!!reviews.length && (
         <div className={classes.buttonContainer}>
           <div className={classes.flex}>
-            <Button onClick={handleMoreButton} variant="contained" color="primary">
+            <Button onClick={handleMoreButton} variant="outlined" color="primary">
               <ArrowDropDownIcon />
             </Button>
-            <Button onClick={handleClose} variant="contained" color="secondary">
+            <Button onClick={handleClose} variant="outlined" color="primary">
               <ArrowDropUpIcon />
             </Button>
           </div>

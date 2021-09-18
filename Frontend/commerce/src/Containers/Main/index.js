@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import Products from '../Products';
+import { Link } from 'react-scroll';
 
 //STYLES
 const useStyles = makeStyles((theme) => ({
@@ -75,18 +76,22 @@ const Main = () => {
   return (
     <section className={classes.outerContainer}>
       <div className={classes.banner}>
-        <Button
-          className={classes.button}
-          endIcon={<ArrowDownwardIcon />}
-          color="secondary"
-          variant={'contained'}
-        >
-          Shop
-        </Button>
+        <Link activeClass="active" to="products" spy={true} smooth={true}>
+          <Button
+            className={classes.button}
+            endIcon={<ArrowDownwardIcon />}
+            color="secondary"
+            variant={'contained'}
+          >
+            Shop
+          </Button>
+        </Link>
         <h2 className={classes.bannerText}>Shop for the latest golden shoes</h2>
       </div>
-      <div className={classes.center}>
-        <Products />
+      <div id="products">
+        <div className={classes.center}>
+          <Products />
+        </div>
       </div>
     </section>
   );

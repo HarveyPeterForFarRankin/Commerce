@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '50px',
     width: '100%',
     backgroundColor: '#EFEFEF',
+    marginBottom: '50px',
   },
   sliderContainer: {
     height: '100%',
@@ -194,6 +195,7 @@ const Products = () => {
                   id={product.id}
                   title={product.title}
                   category={product.category}
+                  cost={product.cost}
                 />
               </div>
             );

@@ -1,6 +1,6 @@
 import { sliderWidth } from '../../Constants';
 import { makeStyles } from '@material-ui/styles';
-import { Category, CategoryOutlined } from '@material-ui/icons';
+import { Divider } from '@material-ui/core';
 
 //STYLES
 const useStyles = makeStyles((theme) => ({
@@ -27,10 +27,17 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: '#ECECEC',
       },
     },
-    activeCategory: {
-      color: '#993428',
-      backgroundColor: '#ECECEC',
-    },
+  },
+  activeCategory: {
+    color: '#993428',
+    backgroundColor: '#ECECEC',
+  },
+  banner: {
+    boxSizing: 'border-box',
+    textAlign: 'center',
+    padding: ' 15px 0',
+    fontSize: '24px',
+    fontWeight: 'bold',
   },
 }));
 
@@ -40,18 +47,22 @@ const categories = ['sport', 'summer', 'smart', 'casual', 'comfort'];
 const Slider = ({ closeNav, categoryClick, activeCategory, ...props }) => {
   const classes = useStyles();
   return (
-    <ul className={classes.container}>
-      {categories.map((category) => {
-        return (
-          <li
-            className={`${activeCategory === category && classes.activeCategory}`}
-            onClick={() => categoryClick(category)}
-          >
-            {category}
-          </li>
-        );
-      })}
-    </ul>
+    <div>
+      <div className={classes.banner}>Cartegories</div>
+      <Divider />
+      <ul className={classes.container}>
+        {categories.map((category) => {
+          return (
+            <li
+              className={`${activeCategory === category && classes.activeCategory}`}
+              onClick={() => categoryClick(category)}
+            >
+              {category}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
   );
 };
 

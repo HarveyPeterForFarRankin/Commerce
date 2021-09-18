@@ -14,6 +14,7 @@ const useStyles = makeStyles({
     paddingTop: '56.25%', // 16:9
   },
   root: {
+    boxSizing: 'border-box',
     minWidth: 275,
   },
   bullet: {
@@ -29,12 +30,19 @@ const useStyles = makeStyles({
   },
 });
 
-export default function SimpleCard({ id, title, category, buttonClick, ...props }) {
+export default function SimpleCard({
+  id,
+  title,
+  category,
+  buttonClick,
+  cost,
+  ...props
+}) {
   const classes = useStyles();
   const image = require(`../../Assets/shoes/${id}.jpg`).default;
   return (
     <Card onClick={() => buttonClick(id)} className={classes.root}>
-      <CardMedia className={classes.media} image={image} title="Paella dish" />
+      <CardMedia className={classes.media} image={image} title="golden shoes shoe" />
       <CardContent>
         <Typography className={classes.title} color="textSecondary" gutterBottom>
           {category}
@@ -43,9 +51,7 @@ export default function SimpleCard({ id, title, category, buttonClick, ...props 
           {title}
         </Typography>
         <Typography variant="body2" component="p">
-          well meaning and kindly.
-          <br />
-          {'"a benevolent smile"'}
+          £{cost}.00
         </Typography>
       </CardContent>
       <CardActions>

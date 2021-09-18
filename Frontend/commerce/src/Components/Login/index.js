@@ -16,10 +16,14 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-around',
-    width: '400px',
+    width: '300px',
     height: '300px',
     backgroundColor: '#fffff',
     padding: '15px',
+    [theme.breakpoints.up('sm')]: {
+      // styles
+      width: '400px',
+    },
   },
   login: {
     textTransform: 'uppercase',

@@ -12,6 +12,7 @@ import { AuthContext } from '../../App';
 import { useHistory } from 'react-router';
 import { createCart, getCartItems } from '../../API/Products';
 import Popover from '@material-ui/core/Popover';
+import Cart from '../Cart';
 
 const AuthHelper = new Auth();
 
@@ -59,12 +60,7 @@ const useStyles = makeStyles((theme) => ({
     height: '28px',
     width: '28px',
   },
-  fbIcon: {
-    color: '#4267B2',
-  },
-  twIcon: {
-    color: '#1DA1F2',
-  },
+
   text: {
     color: theme.palette.primary.main,
   },
@@ -157,7 +153,6 @@ export default function PrimarySearchAppBar() {
               Golden Shoe
             </Typography>
           </div>
-
           <div className={classes.section}>
             {userName && <p>{userName}</p>}
 
@@ -183,7 +178,7 @@ export default function PrimarySearchAppBar() {
           horizontal: 'center',
         }}
       >
-        <div className={classes.cartPopup}>items go here</div>
+        <Cart items={cart} />
       </Popover>
     </div>
   );

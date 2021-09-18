@@ -18,7 +18,9 @@ const useStyles = makeStyles((theme) => ({
   },
   footer: {
     height: '200px',
-    backgroundColor: 'rgb(202,202,202, 0.3)',
+    backgroundColor: 'rgb(211, 209, 209)',
+    borderTop: `1px solid rgb(206, 202, 202)`,
+    padding: '15px',
   },
 }));
 
@@ -31,6 +33,7 @@ const BaseLayout = ({ children, ...props }) => {
       <div className={classes.container}>
         <main className={classes.content}>{children}</main>
       </div>
+      <div className={classes.footer}></div>
     </div>
   );
 };

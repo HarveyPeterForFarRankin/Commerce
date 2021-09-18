@@ -16,9 +16,11 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Reviews from '../../Components/Reviews';
 import { useRef } from 'react';
 import { Rating } from '@material-ui/lab';
+import useCart from '../../HOOKS/useCart';
 
 const useStyles = makeStyles((theme) => ({
   outerContainer: {
+    padding: '15px',
     boxSizing: 'border-box',
     height: '100wh',
     backgroundColor: '#EFEFEF',
@@ -47,11 +49,13 @@ const useStyles = makeStyles((theme) => ({
     boxSizing: 'border-box',
   },
   img: {
-    borderTopRightRadius: '10px',
-    borderBottomRightRadius: '10px',
     maxWidth: '100%',
     flexBasis: '50%',
     objectFit: 'cover',
+    [theme.breakpoints.up('md')]: {
+      borderTopRightRadius: '10px',
+      borderBottomRightRadius: '10px',
+    },
   },
   innerContainer: {
     display: 'flex',
@@ -113,6 +117,13 @@ const useStyles = makeStyles((theme) => ({
   reivews: {
     padding: '30px 0px',
   },
+  question: {
+    transition: 'all .6s',
+    color: theme.palette.info.main,
+    '&:hover': {
+      color: theme.palette.info.dark,
+    },
+  },
 }));
 
 const Product = ({ match, ...props }) => {
@@ -123,6 +134,7 @@ const Product = ({ match, ...props }) => {
   const [reviews, setReviews] = useState([]);
   const [pageSize, setPageSize] = useState(2);
   const reviewsEndRef = useRef(null);
+  const [setCartData] = useCart();
 
   useEffect(() => {
     const {
@@ -164,9 +176,9 @@ const Product = ({ match, ...props }) => {
         size: 1,
         quantity: +quantity,
       };
-      console.log(payload);
       const response = await addToOrder(payload);
-      console.log(response);
+      const { status } = response;
+      if (status === 200) setCartData(order);
     }
   };
 
@@ -217,7 +229,7 @@ const Product = ({ match, ...props }) => {
               <p className={classes.text}>{description}</p>
             </div>
             <div className={classes.purchaseContainer}>
-              <p className={classes.cost}>£{cost}</p>
+              <p className={classes.cost}>£{cost}.00</p>
               <p>
                 {inventory ? (
                   <p className={`${classes.inventory} ${classes.green}`}>In Stock</p>
@@ -258,7 +270,7 @@ const Product = ({ match, ...props }) => {
               </Button>
               <div className={classes.helpIconPosition}>
                 <Tooltip title="Returns">
-                  <HelpOutlineIcon className={classes.green} />
+                  <HelpOutlineIcon className={classes.question} />
                 </Tooltip>
               </div>
             </div>

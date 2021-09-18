@@ -19,8 +19,6 @@ function App() {
     //try log in
     checkToken()
       .then((res) => {
-        // this needs to be finshed
-        console.log(res);
         const {
           status,
           data: { first_name, id },

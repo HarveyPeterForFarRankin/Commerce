@@ -31,3 +31,7 @@ export const getCartItems = (cartId) => {
 export const addToOrder = (body) => {
   return axios.post(`${host}product/orders/items/create`, body, headers);
 };
+
+export const deleteOrderItem = (cartId) => {
+  return axios.delete(`${host}product/orders/items/update/${cartId}`, {}, headers);
+};
