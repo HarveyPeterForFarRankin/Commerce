@@ -1,8 +1,7 @@
-import { Button, Divider } from '@material-ui/core';
+import { Button, Divider, IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { useEffect } from 'react';
-import { deleteOrderItem } from '../../API/Products';
 import useCart from '../../HOOKS/useCart';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -29,6 +28,10 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '18px',
     fontWeight: 'bold',
   },
+  cross: {
+    cursor: 'pointer',
+    color: theme.palette.secondary.dark,
+  },
 }));
 
 const Cart = ({ items, ...props }) => {
@@ -40,29 +43,40 @@ const Cart = ({ items, ...props }) => {
   );
 
   const handleDelete = (id) => {
-    deleteOrderItem(id);
+    deleteCartItem(id);
   };
 
   return (
     <div className={classes.container}>
-      <div className={classes.items}>
-        {items.map(({ product: { title, cost }, quantity, id }) => {
-          return (
-            <div>
-              <p className={classes.total}>{title}</p>
-              <p>£{cost}</p>
-              <button onClick={() => handleDelete(id)}>Delete</button>
-              <Divider />
-            </div>
-          );
-        })}
-      </div>
-      <div className={classes.flex}>
-        <Button className={classes.button} variant="contained" color="secondary">
-          Buy Now
-        </Button>
-        <p className={classes.total}>£{total}</p>
-      </div>
+      {items.length ? (
+        <>
+          <div className={classes.items}>
+            {items.map(({ product: { title, cost }, quantity, id }) => {
+              return (
+                <div>
+                  <div className={classes.flex}>
+                    <p className={classes.total}>{title}</p>
+                    <IconButton onClick={() => handleDelete(id)}>
+                      <CancelIcon className={classes.cross} />
+                    </IconButton>
+                  </div>
+
+                  <p>£{cost}</p>
+                  <Divider />
+                </div>
+              );
+            })}
+          </div>
+          <div className={classes.flex}>
+            <Button className={classes.button} variant="contained" color="secondary">
+              Buy Now
+            </Button>
+            <p className={classes.total}>£{total}</p>
+          </div>
+        </>
+      ) : (
+        <p>Cart is empty</p>
+      )}
     </div>
   );
 };

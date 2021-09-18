@@ -17,7 +17,6 @@ class Product(models.Model):
 
 class Order(models.Model):
     owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(default=datetime.now, null=True, blank=True)
     status = models.CharField(max_length=244, default='open')
     discount_code = models.CharField(max_length=244, default='', null=True)
 

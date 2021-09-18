@@ -8,6 +8,8 @@ from .serializers import ProductSerializer, OrdersSerializer, OrdersItemSerializ
 from rest_framework.permissions import AllowAny
 from .util import has_enough_inventory
 import json
+from rest_framework.views import APIView
+from Users.models import CustomUser
 
 # PRODUCT
 
@@ -29,6 +31,26 @@ class ProductRetrieveView(generics.RetrieveAPIView):
     permission_classes = [AllowAny,]
 
 # ORDER || CURRENT CART
+
+class GetCart(APIView):
+    def get(self, request, user):
+        user_obj = CustomUser.objects.get(id=user)
+        print(user_obj)
+        order = Order.objects.filter(owner=user_obj, status='open')
+        serializer = OrdersSerializer(order, many=True)
+        if Order.objects.filter(owner=user_obj, status='open').exists():
+            print('here')
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            print('yass')
+            new_order = Order(status='open', owner=user_obj, discount_code='none')
+            serializer = OrdersSerializer(new_order)
+            new_order.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+            
+
+
+
 
 class OrdersListView(generics.ListCreateAPIView):
     """"
@@ -81,29 +103,24 @@ class OrdersItemsListView(generics.ListAPIView):
         order_id = self.kwargs.get(self.lookup_url_kwarg)
         return OrderItem.objects.filter(order=order_id)
 
-class AddOrderItemDetail(generics.CreateAPIView):
+class AddOrderItemDetail(APIView):
+    permission_classes = [AllowAny,]
 
-    serializer_class = OrdersItemSerializer
-    queryset = OrderItem.objects.all()
-
-    def create(self, request, *args, **kwargs):
-        """
-        create order item and in order and remove quantity from product quantity
-        """
-        product = Product.objects.get(id=self.request.data['product'])
-        order = Order.objects.get(id=self.request.data['order'])
-        quantity = self.request.data['quantity']
-        self.request.data['product'] = product
-        self.request.data['order'] = order
+    def post(self, request):
+        order = Order.objects.get(id=request.data['order'])
+        product = Product.objects.get(id=request.data['product'])
+        quantity = request.data['quantity']
+        orderItem = OrderItem(order=order, product=product, size=request.data['size'], quantity=quantity)
         has_inventory, new_inventory_number = has_enough_inventory(product_query_set=product, quantity_wanted=quantity)
         if has_inventory:
             # update inventory
-            product.inventory = new_inventory_number
-            product.save()
-            response = super(AddOrderItemDetail, self).create(self.request, *args, **kwargs)
-            return response
+           product.inventory = new_inventory_number
+           product.save()
+           orderItem.save();
+           return Response({'message': 'saved'}, status=status.HTTP_200_OK)
         else:
             return Response({'error':'not enough inventory'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class OrderItemDetail(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -112,6 +129,7 @@ class OrderItemDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = OrdersItemSerializer
     queryset = OrderItem.objects.all()
     lookup_url_kwarg = "item_id"
+    permission_classes = [AllowAny,]
 
     def delete(self, request, *args, **kwargs):
       """

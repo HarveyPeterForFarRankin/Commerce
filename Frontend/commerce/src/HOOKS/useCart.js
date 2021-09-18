@@ -20,7 +20,7 @@ const useCart = () => {
     const response = await deleteOrderItem(cartId);
     const { status } = response;
     console.log(response);
-    if (status === 204) setCartData(cartId);
+    if (status === 204) setCartData(localStorage.getItem('cart'));
   };
 
   return [setCartData, deleteCartItem];

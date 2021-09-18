@@ -1,3 +1,3 @@
-GET http://localhost:8000/auth/user/get HTTP/1.1
+GET http://localhost:8000/product/orders/get/1 HTTP/1.1
 content-type: application/json
 Authorization: Token 6cf069b59ba517221f78946eb465c82ed17cbadd
