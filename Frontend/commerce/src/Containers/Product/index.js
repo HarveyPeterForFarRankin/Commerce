@@ -6,7 +6,7 @@ import {
   useMediaQuery,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import { withRouter } from 'react-router';
@@ -17,6 +17,7 @@ import Reviews from '../../Components/Reviews';
 import { useRef } from 'react';
 import { Rating } from '@material-ui/lab';
 import useCart from '../../HOOKS/useCart';
+import { AuthContext } from '../../App';
 
 const useStyles = makeStyles((theme) => ({
   outerContainer: {
@@ -135,6 +136,7 @@ const Product = ({ match, ...props }) => {
   const [pageSize, setPageSize] = useState(2);
   const reviewsEndRef = useRef(null);
   const [setCartData] = useCart();
+  const [user, setUser, isAuthenticated, setAuthenticated] = useContext(AuthContext);
 
   useEffect(() => {
     const {
@@ -259,15 +261,26 @@ const Product = ({ match, ...props }) => {
                 </FormControl>
               </div>
               <Rating disabled name="simple-controlled" value={overallRating} />
-              <Button
-                onClick={handleAddToCart}
-                disabled={!inventory}
-                className={classes.cartButton}
-                color="secondary"
-                variant="contained"
+              <Tooltip
+                title={
+                  !isAuthenticated
+                    ? 'Please sign in'
+                    : !inventory
+                    ? 'Sold Out'
+                    : 'Add to Cart'
+                }
               >
-                Add To Cart
-              </Button>
+                <Button
+                  onClick={handleAddToCart}
+                  disabled={!inventory || !isAuthenticated}
+                  className={classes.cartButton}
+                  color="secondary"
+                  variant="contained"
+                >
+                  Add To Cart
+                </Button>
+              </Tooltip>
+
               <div className={classes.helpIconPosition}>
                 <Tooltip title="Returns">
                   <HelpOutlineIcon className={classes.question} />

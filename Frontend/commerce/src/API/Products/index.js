@@ -4,6 +4,7 @@ import Auth from '../../Helpers/auth';
 const AuthHelper = new Auth();
 const headers = {
   headers: {
+    'content-type': 'application/json',
     authorization: `Token ${AuthHelper.getItem('token')}`,
   },
 };
@@ -25,13 +26,37 @@ export const createCart = (body) => {
 };
 
 export const getCartItems = (cartId) => {
-  return axios.get(`${host}product/orders/items/${cartId}`, headers);
+  return axios.get(`${host}product/orders/items/${cartId}`, {
+    headers: {
+      'content-type': 'application/json',
+    },
+  });
 };
 
 export const addToOrder = (body) => {
-  return axios.post(`${host}product/orders/items/create`, body, headers);
+  return axios.post(`${host}product/orders/items/create`, body, {
+    headers: {
+      'content-type': 'application/json',
+    },
+  });
+};
+
+export const updateOrder = (body, orderId) => {
+  return axios.put(`${host}product/orders/${orderId}`, body, {
+    headers: {
+      'content-type': 'application/json',
+    },
+  });
 };
 
 export const deleteOrderItem = (cartId) => {
   return axios.delete(`${host}product/orders/items/update/${cartId}`, {}, headers);
+};
+
+export const getCart = (userId) => {
+  return axios.get(`${host}product/orders/get/${userId}`, {
+    headers: {
+      'content-type': 'application/json',
+    },
+  });
 };

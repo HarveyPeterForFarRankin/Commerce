@@ -1,3 +1,7 @@
-GET http://localhost:8000/product/orders/get/1 HTTP/1.1
+PUT  http://localhost:8000/product/orders/24 HTTP/1.1
 content-type: application/json
-Authorization: Token 6cf069b59ba517221f78946eb465c82ed17cbadd
+
+{
+    "owner": "1",
+    "status":"closed"
+}

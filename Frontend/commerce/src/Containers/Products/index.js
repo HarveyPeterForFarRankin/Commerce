@@ -182,25 +182,27 @@ const Products = () => {
             closeNav={toggleSlider}
           />
         </div>
-        <div
-          className={`${classes.prdoductContainer} ${
-            sliderOpen && classes.prdoductContainerOpen
-          }`}
-        >
-          {products.map((product) => {
-            return (
-              <div key={product.id} className={classes.cardContainer}>
-                <Card
-                  buttonClick={routeToProductPage}
-                  id={product.id}
-                  title={product.title}
-                  category={product.category}
-                  cost={product.cost}
-                />
-              </div>
-            );
-          })}
-        </div>
+        {products.length && (
+          <div
+            className={`${classes.prdoductContainer} ${
+              sliderOpen && classes.prdoductContainerOpen
+            }`}
+          >
+            {products.map((product) => {
+              return (
+                <div key={product.id} className={classes.cardContainer}>
+                  <Card
+                    buttonClick={routeToProductPage}
+                    id={product.id}
+                    title={product.title}
+                    category={product.category}
+                    cost={product.cost}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -7,7 +7,8 @@ import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
 import MuiAlert from '@material-ui/lab/Alert';
 import { AuthContext } from '../../App';
-import { getCartItems } from '../../API/Products';
+import { getCart, getCartItems } from '../../API/Products';
+import useCart from '../../HOOKS/useCart';
 
 const AuthHelper = new Auth();
 
@@ -42,6 +43,7 @@ const Login = () => {
   const classes = useStyles();
   const [user, setUser, isAuthenticated, setAuthenticated, cart, setCart] =
     useContext(AuthContext);
+  const [setCartData] = useCart();
 
   const login = async () => {
     setLoading(true);
@@ -58,12 +60,11 @@ const Login = () => {
         setUser(user);
         AuthHelper.setToken(token);
         clearInputs();
-        getCartItems(1).then((res) => {
-          const {
-            data: { results },
-          } = res;
-          setCart(results);
-        });
+        const cartResponse = await getCart(user.user_id);
+        const { data } = cartResponse;
+        const { id } = data[0];
+        localStorage.setItem('cart', id);
+        setCartData(id);
       }
     } catch (err) {
       setLoading(false);

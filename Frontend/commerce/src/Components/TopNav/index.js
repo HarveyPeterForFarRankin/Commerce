@@ -10,9 +10,10 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import Auth from '../../Helpers/auth';
 import { AuthContext } from '../../App';
 import { useHistory } from 'react-router';
-import { createCart, getCartItems } from '../../API/Products';
+import { getCart } from '../../API/Products';
 import Popover from '@material-ui/core/Popover';
 import Cart from '../Cart';
+import useCart from '../../HOOKS/useCart';
 
 const AuthHelper = new Auth();
 
@@ -93,6 +94,7 @@ export default function PrimarySearchAppBar() {
     useContext(AuthContext);
   const history = useHistory();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [setCartData] = useCart();
 
   useEffect(() => {
     const { first_name } = user;
@@ -103,28 +105,18 @@ export default function PrimarySearchAppBar() {
 
   useEffect(() => {
     //update cart
-    if (user.id) {
-      setCartData();
+    if (isAuthenticated) {
+      handleSetCartData();
     }
-  }, [user.id]);
+  }, [isAuthenticated]);
 
-  const setCartData = () => {
-    const cartId = AuthHelper.getItem('cart');
-    if (!cartId) {
-      // create cart if one not in localstorage
-      createCart({ status: 'open', owner: user.id }).then((res) => {
-        const {
-          data: { id },
-        } = res;
-        localStorage.setItem('cart', id);
-      });
-    } else {
-      getCartItems(cartId).then((res) => {
-        const {
-          data: { results },
-        } = res;
-        setCart(results);
-      });
+  const handleSetCartData = async () => {
+    if (!!user.id) {
+      const response = await getCart(user.id);
+      const { data } = response;
+      const { id } = data[0];
+      localStorage.setItem('cart', id);
+      setCartData(id);
     }
   };
 

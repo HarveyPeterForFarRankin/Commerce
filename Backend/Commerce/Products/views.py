@@ -33,6 +33,7 @@ class ProductRetrieveView(generics.RetrieveAPIView):
 # ORDER || CURRENT CART
 
 class GetCart(APIView):
+    permission_classes = [AllowAny,]
     def get(self, request, user):
         user_obj = CustomUser.objects.get(id=user)
         print(user_obj)
@@ -85,6 +86,7 @@ class OrderDetail(generics.RetrieveUpdateDestroyAPIView):
     """ 
     serializer_class = OrdersSerializer
     queryset = Order.objects.all()
+    permission_classes = [AllowAny,]
 
 # ITEMS WITHIN ORDER || OR CURRENT CART
 
@@ -95,6 +97,8 @@ class OrdersItemsListView(generics.ListAPIView):
     serializer_class = OrdersItemSerializer
     queryset = OrderItem.objects.all()
     lookup_url_kwarg = "pk"
+    permission_classes = [AllowAny,]
+    
     
     def get_queryset(self):
         """
