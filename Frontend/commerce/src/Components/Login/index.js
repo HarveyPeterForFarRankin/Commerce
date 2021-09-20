@@ -27,8 +27,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   login: {
+    fontFamily: 'Lilita One, cursive',
     textTransform: 'uppercase',
-    fontSize: '24px',
+    fontSize: '30px',
     margin: 0,
     padding: 0,
     textAlign: 'center',

@@ -67,8 +67,9 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
   },
   title: {
+    fontFamily: 'Lilita One, cursive',
     textTransform: 'capitalize',
-    fontSize: '24px',
+    fontSize: '35px',
     paddingBottom: '12px',
   },
   text: {

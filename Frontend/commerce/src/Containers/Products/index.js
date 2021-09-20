@@ -75,14 +75,18 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
     margin: '10px',
     flex: 1,
-    '&:hover': {
-      transform: 'translateY(-10px)',
+    [theme.breakpoints.up('sm')]: {
+      '&:hover': {
+        transform: 'translateY(-10px)',
+      },
     },
   },
   smallFilter: {
     display: 'flex',
     flex: '0 0 50%',
     justifyContent: 'space-around',
+    fontFamily: 'Lilita One, cursive',
+    fontSize: '30px',
   },
   filterButton: {
     textTransform: 'capitalize',

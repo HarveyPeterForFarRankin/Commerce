@@ -30,21 +30,31 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   button: {
+    fontFamily: 'Lilita One, cursive',
     position: 'absolute',
-    top: '35%',
+    top: '50%',
     left: '50%',
     transform: 'translate(-50%,-50%)',
     animation: `$myEffect 2500ms ${theme.transitions.easing.easeInOut}`,
   },
   bannerText: {
+    whiteSpace: 'no-wrap',
+    fontFamily: 'Lilita One, cursive',
+    fontSize: '20px',
     padding: 0,
     margin: 0,
     position: 'absolute',
-    top: '45%',
+    top: '35%',
     left: '50%',
     transform: 'translate(-50%,-10%)',
     color: theme.palette.secondary.dark,
     animation: `$myEffect 2000ms ${theme.transitions.easing.easeInOut}`,
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '25px',
+    },
+    [theme.breakpoints.up('md')]: {
+      fontSize: '40px',
+    },
   },
   '@keyframes myEffect': {
     '0%': {

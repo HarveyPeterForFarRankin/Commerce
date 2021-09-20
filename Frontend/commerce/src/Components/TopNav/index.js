@@ -63,7 +63,9 @@ const useStyles = makeStyles((theme) => ({
   },
 
   text: {
+    fontFamily: 'Lilita One, cursive',
     color: theme.palette.primary.main,
+    fontSize: '40px',
   },
   section: {
     justifyContent: 'flex-end',

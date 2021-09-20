@@ -5,6 +5,8 @@ import { Divider } from '@material-ui/core';
 //STYLES
 const useStyles = makeStyles((theme) => ({
   container: {
+    fontFamily: 'Lilita One, cursive',
+    fontSize: '25px',
     boxSizing: 'border-box',
     width: sliderWidth,
     height: '100%',
@@ -33,10 +35,12 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#ECECEC',
   },
   banner: {
+    color: theme.palette.primary.main,
+    fontFamily: 'Lilita One, cursive',
     boxSizing: 'border-box',
     textAlign: 'center',
     padding: ' 15px 0',
-    fontSize: '24px',
+    fontSize: '32px',
     fontWeight: 'bold',
   },
 }));
